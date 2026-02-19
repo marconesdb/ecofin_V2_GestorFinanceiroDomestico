@@ -1,17 +1,14 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
-// Added missing icon AdjustmentsHorizontalIcon to the import list
 import { 
   PlusIcon, TrashIcon, ChartBarIcon, ListBulletIcon, 
-  SparklesIcon, WalletIcon, MagnifyingGlassIcon, 
-  ArrowPathIcon, ShieldCheckIcon, CreditCardIcon,
-  ArrowTrendingDownIcon, BeakerIcon, AdjustmentsHorizontalIcon
+  WalletIcon, MagnifyingGlassIcon, 
+  ArrowPathIcon, CreditCardIcon,
+  ArrowTrendingDownIcon, AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/outline';
-import { Expense, Category, AIInsight, BudgetGoal } from './types';
-import { getFinancialAdvice } from './services/geminiService';
+import { Expense, Category, BudgetGoal } from './types';
+// REMOVIDO: import { getFinancialAdvice } from './services/geminiService';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
-  PieChart, Pie
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
 
 const API_URL = 'http://localhost:3001/api';
@@ -25,8 +22,8 @@ const App: React.FC = () => {
   const [category, setCategory] = useState<Category>(Category.FOOD);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [insights, setInsights] = useState<AIInsight[]>([]);
-  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  // REMOVIDO: const [insights, setInsights] = useState<AIInsight[]>([]);
+  // REMOVIDO: const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [view, setView] = useState<'dashboard' | 'list' | 'budgets'>('dashboard');
 
@@ -141,13 +138,7 @@ const App: React.FC = () => {
     })).filter(d => d.value > 0 || d.limit > 0);
   }, [expenses, budgetGoals]);
 
-  const fetchAIAdvice = async () => {
-    if (expenses.length === 0) return;
-    setIsLoadingAI(true);
-    const advice = await getFinancialAdvice(expenses);
-    setInsights(advice);
-    setIsLoadingAI(false);
-  };
+  // REMOVIDO: função fetchAIAdvice inteira
 
   const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
 
@@ -186,7 +177,7 @@ const App: React.FC = () => {
       <main className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          {/* Coluna Esquerda: Formulário e IA */}
+          {/* Coluna Esquerda: Formulário */}
           <div className="lg:col-span-4 space-y-8">
             
             {/* Card de Adição de Gasto */}
@@ -230,46 +221,7 @@ const App: React.FC = () => {
               </form>
             </div>
 
-            {/* Consultor Inteligente (IA) */}
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-white font-bold flex items-center gap-2">
-                    <SparklesIcon className="w-6 h-6 text-emerald-400" /> 
-                    Consultor EcoFin
-                  </h3>
-                  <button 
-                    onClick={fetchAIAdvice} 
-                    disabled={isLoadingAI || expenses.length === 0}
-                    className={`bg-white/10 hover:bg-white/20 p-2 rounded-xl transition-all ${isLoadingAI ? 'animate-pulse' : ''}`}
-                  >
-                    <ArrowPathIcon className={`w-5 h-5 text-white ${isLoadingAI ? 'animate-spin' : ''}`} />
-                  </button>
-                </div>
-                
-                <div className="space-y-4">
-                  {insights.length > 0 ? insights.map((insight, idx) => (
-                    <div key={idx} className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-                      <div className="flex items-start gap-3">
-                         <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${insight.severity === 'high' ? 'bg-red-500' : insight.severity === 'medium' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                         <div>
-                            <h4 className="text-xs font-bold text-emerald-300 mb-1">{insight.title}</h4>
-                            <p className="text-[11px] text-slate-300 leading-relaxed font-medium">{insight.content}</p>
-                         </div>
-                      </div>
-                    </div>
-                  )) : (
-                    <div className="text-center py-6">
-                      <BeakerIcon className="w-8 h-8 text-slate-600 mx-auto mb-3 opacity-50" />
-                      <p className="text-xs text-slate-400 italic">"Estou pronto para analisar seu perfil de gastos. Clique no botão de atualizar acima."</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:scale-110 transition-transform duration-700">
-                <ShieldCheckIcon className="w-56 h-56 text-white" />
-              </div>
-            </div>
+            {/* REMOVIDO: Card do Consultor Inteligente (IA) */}
           </div>
 
           {/* Coluna Direita: Dashboard / Listagem */}
@@ -323,7 +275,6 @@ const App: React.FC = () => {
 
                 <section className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
                   <h3 className="text-lg font-bold mb-8 text-slate-800 flex items-center gap-2">
-                    {/* Fixed: Used imported AdjustmentsHorizontalIcon */}
                     <AdjustmentsHorizontalIcon className="w-5 h-5 text-emerald-600" />
                     Progresso do Orçamento
                   </h3>
@@ -408,7 +359,7 @@ const App: React.FC = () => {
               <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
                 <div className="mb-10">
                   <h3 className="text-xl font-bold text-slate-800">Metas de Gastos Mensais</h3>
-                  <p className="text-slate-400 text-sm mt-1">Defina quanto você pretende gastar em cada categoria para que o Consultor EcoFin possa te alertar.</p>
+                  <p className="text-slate-400 text-sm mt-1">Defina quanto você pretende gastar em cada categoria.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {Object.values(Category).map(cat => (
